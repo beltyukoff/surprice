@@ -14,9 +14,70 @@
             color: #fff;
             font-family: 'Montserrat', sans-serif;
             overflow-x: hidden;
+            background-attachment: fixed;
         }
 
-        /* Падающие сердечки на фоне */
+        /* --- СТАРТОВЫЙ ЭКРАН --- */
+        #start-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #110513;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 1.5s ease;
+        }
+
+        #start-screen h2 {
+            font-family: 'Caveat', cursive;
+            font-size: 3rem;
+            color: #ff85b3;
+            margin-bottom: 20px;
+        }
+
+        .pulse-heart-btn {
+            font-size: 5rem;
+            cursor: pointer;
+            animation: pulse 1.2s infinite;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .pulse-heart-btn:active {
+            transform: scale(0.9);
+        }
+
+        #start-screen p {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.7);
+            letter-spacing: 2px;
+            animation: fadeInOut 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); text-shadow: 0 0 0 rgba(255, 105, 180, 0.7); }
+            50% { transform: scale(1.15); text-shadow: 0 0 40px rgba(255, 105, 180, 1); }
+            100% { transform: scale(1); text-shadow: 0 0 0 rgba(255, 105, 180, 0.7); }
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        /* --- ОСНОВНОЙ КОНТЕНТ --- */
+        #main-content {
+            display: none; /* Скрыт до нажатия */
+            opacity: 0;
+            transition: opacity 2s ease;
+        }
+
         #hearts-container {
             position: fixed;
             top: 0;
@@ -29,7 +90,7 @@
 
         .heart {
             position: absolute;
-            color: rgba(255, 105, 180, 0.4);
+            color: rgba(255, 105, 180, 0.6);
             font-size: 20px;
             animation: fall linear infinite;
         }
@@ -53,12 +114,11 @@
 
         .hero h1 {
             font-family: 'Caveat', cursive;
-            font-size: 4rem;
+            font-size: 4.5rem;
             color: #ff85b3;
-            text-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
+            text-shadow: 0 0 20px rgba(255, 105, 180, 0.6);
             margin-bottom: 20px;
             padding: 0 20px;
-            animation: fadeIn 2s ease-in-out;
         }
 
         .scroll-down {
@@ -68,9 +128,9 @@
             color: #ffb6c1;
         }
 
-        /* Секция с фотографиями */
+        /* Секция с фотографиями (Полароид) */
         .gallery {
-            max-width: 800px;
+            max-width: 600px;
             margin: 0 auto;
             padding: 50px 20px;
             position: relative;
@@ -78,42 +138,57 @@
         }
 
         .photo-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 60px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
-            opacity: 0; /* Для анимации появления */
-            transform: translateY(50px);
-            transition: all 0.8s ease-out;
+            background: #fff;
+            padding: 15px 15px 30px 15px;
+            border-radius: 5px;
+            margin-bottom: 80px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            opacity: 0;
+            transform: translateY(50px) rotate(-3deg);
+            transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+            color: #333; /* Темный текст для белого полароида */
+        }
+
+        /* Чередуем наклон для красоты */
+        .photo-card:nth-child(even) {
+            transform: translateY(50px) rotate(3deg);
         }
 
         .photo-card.visible {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(0) rotate(-3deg);
+        }
+
+        .photo-card:nth-child(even).visible {
+            transform: translateY(0) rotate(3deg);
+        }
+
+        /* Эффект при наведении */
+        .photo-card:hover {
+            transform: scale(1.05) rotate(0deg) !important;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.7);
+            z-index: 10;
         }
 
         .photo-card img {
             width: 100%;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            border-radius: 3px;
+            display: block;
         }
 
         .photo-caption {
             font-family: 'Caveat', cursive;
-            font-size: 2rem;
+            font-size: 2.2rem;
             text-align: center;
-            margin-top: 20px;
-            color: #ffd1dc;
+            margin-top: 15px;
+            color: #1a0b1c;
+            font-weight: 600;
         }
 
         /* Финальное сообщение */
         .final-message {
             text-align: center;
-            padding: 100px 20px;
-            margin-bottom: 50px;
+            padding: 50px 20px 100px 20px;
             position: relative;
             z-index: 1;
             opacity: 0;
@@ -128,24 +203,48 @@
 
         .final-message h2 {
             font-family: 'Caveat', cursive;
-            font-size: 3.5rem;
+            font-size: 4rem;
             color: #ff4d79;
             margin-bottom: 30px;
+            text-shadow: 0 0 15px rgba(255, 77, 121, 0.5);
         }
 
         .final-message p {
             font-size: 1.2rem;
-            line-height: 1.6;
+            line-height: 1.8;
             max-width: 600px;
             margin: 0 auto;
-            background: rgba(0,0,0,0.3);
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
             padding: 30px;
             border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        /* Кнопка-сюрприз */
+        .magic-btn {
+            margin-top: 40px;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(45deg, #ff4d79, #ff85b3);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(255, 77, 121, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .magic-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 25px rgba(255, 77, 121, 0.6);
+        }
+
+        .magic-btn:active {
+            transform: translateY(0) scale(0.95);
         }
 
         @keyframes bounce {
@@ -156,84 +255,162 @@
 
         /* Адаптивность для телефонов */
         @media (max-width: 768px) {
-            .hero h1 { font-size: 3rem; }
-            .photo-caption { font-size: 1.5rem; }
-            .final-message h2 { font-size: 2.5rem; }
+            .hero h1 { font-size: 3.5rem; }
+            .photo-caption { font-size: 1.8rem; }
+            .final-message h2 { font-size: 3rem; }
+            .pulse-heart-btn { font-size: 4rem; }
+            .photo-card { margin-bottom: 50px; }
         }
     </style>
 </head>
 <body>
 
-    <div id="hearts-container"></div>
+    <!-- Скрытый плеер для музыки -->
+    <audio id="bg-music" loop>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
 
-    <section class="hero">
-        <h1>С праздником, моя любимая Елизавета! ❤️</h1>
-        <div class="scroll-down">Листай вниз ⬇️</div>
-    </section>
+    <!-- Стартовый экран-интрига -->
+    <div id="start-screen">
+        <h2>Сюрприз для Лизы...</h2>
+        <div class="pulse-heart-btn" onclick="startMagic()">❤️</div>
+        <p>Нажми на сердечко</p>
+    </div>
 
-    <section class="gallery">
-        <!-- Фото 1: Метро -->
-        <div class="photo-card">
-            <img src="photo1.jpg" alt="Мы в метро">
-            <div class="photo-caption">С тобой даже в зимнем метро тепло и уютно...</div>
-        </div>
+    <!-- Основной сайт -->
+    <div id="main-content">
+        <div id="hearts-container"></div>
 
-        <!-- Фото 2: Лифт -->
-        <div class="photo-card">
-            <img src="photo2.jpg" alt="Лифтолук">
-            <div class="photo-caption">Обожаю наше чувство юмора и эти лифтолуки 🤪</div>
-        </div>
+        <section class="hero">
+            <h1>Моей любимой<br>Елизавете ❤️</h1>
+            <div class="scroll-down">Листай вниз ⬇️</div>
+        </section>
 
-        <!-- Фото 3: Каток -->
-        <div class="photo-card">
-            <img src="photo3.jpg" alt="Каток">
-            <div class="photo-caption">Самые волшебные моменты — те, что мы проводим вместе ⛸️❄️</div>
-        </div>
+        <section class="gallery">
+            <div class="photo-card">
+                <img src="photo1.jpg" alt="Мы в метро">
+                <div class="photo-caption">С тобой даже в метро уютно...</div>
+            </div>
 
-        <!-- Фото 4: Кухня -->
-        <div class="photo-card">
-            <img src="photo4.jpg" alt="Забавная моська">
-            <div class="photo-caption">Твои забавные моськи — мое любимое искусство 🥰</div>
-        </div>
+            <div class="photo-card">
+                <img src="photo2.jpg" alt="Лифтолук">
+                <div class="photo-caption">Обожаю наши лифтолуки 🤪</div>
+            </div>
 
-        <!-- Фото 5: Машина -->
-        <div class="photo-card">
-            <img src="photo5.jpg" alt="В машине">
-            <div class="photo-caption">Куда бы мы ни ехали, главное — что мы рядом!</div>
-        </div>
-    </section>
+            <div class="photo-card">
+                <img src="photo3.jpg" alt="Каток">
+                <div class="photo-caption">Волшебные моменты на льду ❄️</div>
+            </div>
 
-    <section class="final-message">
-        <h2>Я тебя безумно люблю!</h2>
-        <p>Лиза, ты делаешь каждый мой день ярче. Спасибо тебе за твою поддержку, за твою улыбку и за то, что ты есть в моей жизни. Я хочу, чтобы ты всегда была такой же счастливой, красивой и невероятной. Обещаю всегда быть рядом и радовать тебя!<br><br>Твой любимый ❤️</p>
-    </section>
+            <div class="photo-card">
+                <img src="photo4.jpg" alt="Забавная моська">
+                <div class="photo-caption">Твои моськи — мое искусство 🥰</div>
+            </div>
+
+            <div class="photo-card">
+                <img src="photo5.jpg" alt="В машине">
+                <div class="photo-caption">Главное — что мы рядом!</div>
+            </div>
+        </section>
+
+        <section class="final-message">
+            <h2>Я тебя безумно люблю!</h2>
+            <p>Лиза, ты делаешь каждый мой день ярче. Спасибо тебе за твою поддержку, за твою улыбку и за то, что ты есть в моей жизни. Я хочу, чтобы ты всегда была такой же счастливой, красивой и невероятной. Обещаю всегда быть рядом и радовать тебя!</p>
+            
+            <button class="magic-btn" onclick="explodeHearts()">Отправить поцелуй 💋</button>
+        </section>
+    </div>
 
     <script>
-        // Скрипт для падающих сердечек
+        // --- 1. Логика стартового экрана и музыки ---
+        function startMagic() {
+            // Прячем стартовый экран
+            const startScreen = document.getElementById('start-screen');
+            startScreen.style.opacity = '0';
+            
+            setTimeout(() => {
+                startScreen.style.display = 'none';
+                
+                // Показываем основной сайт
+                const mainContent = document.getElementById('main-content');
+                mainContent.style.display = 'block';
+                
+                // Даем браузеру долю секунды, чтобы применить display: block перед анимацией прозрачности
+                setTimeout(() => {
+                    mainContent.style.opacity = '1';
+                }, 50);
+
+                // Запускаем музыку
+                const audio = document.getElementById('bg-music');
+                audio.volume = 0.5; // Громкость 50%
+                audio.play().catch(error => console.log("Браузер заблокировал автовоспроизведение"));
+            }, 1000);
+        }
+
+        // --- 2. Фоновые падающие сердечки ---
         function createHeart() {
             const heart = document.createElement('div');
             heart.classList.add('heart');
-            heart.innerHTML = '❤️';
+            // Немного разнообразим сердечки
+            const hearts = ['❤️', '💖', '✨', '💕'];
+            heart.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
             heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.animationDuration = Math.random() * 3 + 2 + 's';
+            heart.style.animationDuration = Math.random() * 3 + 3 + 's';
             heart.style.fontSize = Math.random() * 15 + 10 + 'px';
             document.getElementById('hearts-container').appendChild(heart);
-            setTimeout(() => { heart.remove(); }, 5000);
+            setTimeout(() => { heart.remove(); }, 6000);
         }
-        setInterval(createHeart, 300);
+        setInterval(createHeart, 400);
 
-        // Скрипт для плавной анимации появления фото при прокрутке
+        // --- 3. Плавное появление фото (Observer) ---
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
                 }
             });
-        }, { threshold: 0.1 }); // Срабатывает, когда видно 10% элемента
+        }, { threshold: 0.15 });
 
-        document.querySelectorAll('.photo-card, .final-message').forEach((el) => {
-            observer.observe(el);
-        });
+        // Применяем observer только после того, как основной контент стал видимым
+        setTimeout(() => {
+            document.querySelectorAll('.photo-card, .final-message').forEach((el) => {
+                observer.observe(el);
+            });
+        }, 1000);
+
+        // --- 4. Взрыв сердечек по кнопке (Сюрприз) ---
+        function explodeHearts() {
+            const container = document.getElementById('hearts-container');
+            for(let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.innerHTML = '❤️';
+                    heart.style.position = 'fixed';
+                    heart.style.bottom = '10vh';
+                    // Разлетаются из центра (от 20% до 80% ширины экрана)
+                    heart.style.left = (20 + Math.random() * 60) + 'vw';
+                    heart.style.fontSize = Math.random() * 30 + 20 + 'px';
+                    heart.style.zIndex = '9999';
+                    
+                    // Физика полета
+                    const duration = Math.random() * 2 + 1;
+                    heart.style.transition = `all ${duration}s cubic-bezier(0.1, 0.8, 0.3, 1)`;
+                    
+                    container.appendChild(heart);
+
+                    // Запускаем анимацию полета вверх и в стороны
+                    setTimeout(() => {
+                        heart.style.bottom = '120vh'; // Улетают за верхний край
+                        heart.style.left = Math.random() * 100 + 'vw'; // Разлетаются по сторонам
+                        heart.style.opacity = '0';
+                        heart.style.transform = `rotate(${Math.random() * 360}deg)`;
+                    }, 50);
+
+                    // Удаляем после завершения полета
+                    setTimeout(() => { heart.remove(); }, duration * 1000);
+                }, i * 30); // Создаются не все разом, а быстрой очередью
+            }
+        }
     </script>
 </body>
 </html>
